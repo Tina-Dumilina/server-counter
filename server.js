@@ -1,10 +1,11 @@
 const express = require("express");
 const path = require("path");
 const React = require("react");
-const ce = React.createElement;
 const ReactDOMServer = require("react-dom/server");
+const Component = require("./src/app");
+
+const ce = React.createElement;
 const app = express();
-const Component = require("./public/app");
 
 let counter = 0;
 
@@ -16,9 +17,9 @@ app.get("/", (req, res) => {
   );
 });
 
-app.use("/", express.static("public"));
+app.use("/", express.static("src"));
 
-app.use(express.static("public"));
+app.use(express.static("src"));
 
 app.get("/api/counter", (req, res) => {
   res.json({ counter });
@@ -35,7 +36,7 @@ app.delete("/api/counter", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.status(404).sendFile(path.join(__dirname, "public", "error.html"));
+  res.status(404).sendFile(path.join(__dirname, "src", "error.html"));
 });
 
 const PORT = process.env.PORT || 3000;
