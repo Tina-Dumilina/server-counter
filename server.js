@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const React = require("react");
 const ReactDOMServer = require("react-dom/server");
-const Component = require("./src/app");
+const Component = require("./app");
 
 const ce = React.createElement;
 const app = express();
@@ -12,14 +12,29 @@ let counter = 0;
 app.get("/", (req, res) => {
   res.send(
     `<!doctype html>\n${ReactDOMServer.renderToStaticMarkup(
-      ce(Component, {counter})
+      ce("html", { lang: "en" }, [
+        ce("head", null, [
+          ce("meta", { charSet: "utf-8" }, null),
+          ce(
+            "meta",
+            {
+              name: "viewport",
+              content: "width=device-width, initial-scale=1.0",
+            },
+            null
+          ),
+          ce("title", null, "Server counter"),
+          ce("script", {defer: true, src: './public/main.js'})
+        ]),
+        ce("body", null, ce("div", { id: "root" }, ce(Component, { counter }))),
+      ])
     )}`
   );
 });
 
-app.use("/", express.static("src"));
+app.use("/", express.static("public"));
 
-app.use(express.static("src"));
+app.use(express.static("public"));
 
 app.get("/api/counter", (req, res) => {
   res.json({ counter });
@@ -36,7 +51,7 @@ app.delete("/api/counter", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.status(404).sendFile(path.join(__dirname, "src", "error.html"));
+  res.status(404).sendFile(path.join(__dirname, "public", "error.html"));
 });
 
 const PORT = process.env.PORT || 3000;
