@@ -1,28 +1,19 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
 const React = require("react");
 const ce = React.createElement;
 const ReactDOMServer = require("react-dom/server");
 const app = express();
+const Component = require("./public/app");
 
 let counter = 0;
 
-const App = ce("div", null, [
-  ce("h1", null, ["Counter: ", ce("span", { className: "counter" }, '')]),
-  ce("button", { className: "increment-button" }, "Increment"),
-  ce("button", { className: "reset-button" }, "Reset"),
-]);
-
 app.get("/", (req, res) => {
-  fs.readFile(path.join(__dirname, "public", "index.html"), (err, data) => {
-    res.send(
-      data.toString().replace(
-        '<div id="root"></div>',
-        `<div id="root">${ReactDOMServer.renderToStaticMarkup(App)}</div>`
-      )
-    );
-  });
+  res.send(
+    `<!doctype html>\n${ReactDOMServer.renderToStaticMarkup(
+      ce(Component, {counter})
+    )}`
+  );
 });
 
 app.use("/", express.static("public"));

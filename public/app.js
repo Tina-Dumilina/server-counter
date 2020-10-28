@@ -1,23 +1,28 @@
-const incrementButton = document.querySelector(".increment-button");
-const resetButton = document.querySelector(".reset-button");
-const counterElement = document.querySelector(".counter");
-let counter;
+const React = require("react");
+const ce = React.createElement;
 
-async function changeCounter(method) {
-  await fetch("http://localhost:3000/api/counter", { method: method })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((response) => (counter = response.counter));
-  counterElement.textContent = counter;
-}
+const App = (props) =>
+  ce(React.Fragment, null, [
+    ce("html", { lang: "en" }, null),
+    ce("head", null, [
+      ce("meta", { charset: "utf-8" }, null),
+      ce(
+        "meta",
+        { name: "viewport", content: "width=device-width, initial-scale=1.0" },
+        null
+      ),
+      ce("title", null, "Server counter"),
+    ]),
+    ce(
+      "body",
+      null,
+      ce("div", { id: "root" }, null, [
+        ce("h1", null, ["Counter: ", ce("span", { className: "counter" }, props.counter)]),
+        ce("button", { className: "increment-button" }, "Increment"),
+        ce("button", { className: "reset-button" }, "Reset"),
+      ])
+    ),
+    ce("script", {src: './index.js'})
+  ]);
 
-changeCounter("GET");
-incrementButton.addEventListener("click", () => changeCounter("POST"));
-resetButton.addEventListener("click", () => {
-  if (counter !== 0) {
-    changeCounter("DELETE");
-  }
-});
+module.exports = App

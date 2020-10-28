@@ -1,10 +1,10 @@
 {
   "name": "server-counter",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "repository": "git@github.com:Tina-Dumilina/server-counter.git",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon server.js"
   },
   "author": "Тина Думилина <tina@rnd.stcnet.ru>",
   "license": "MIT",
