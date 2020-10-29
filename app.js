@@ -1,37 +1,38 @@
 const React = require("react");
 const ce = React.createElement;
 
-async function changeCounter(method) {
-  await fetch("http://localhost:3000/api/counter", { method: method })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((response) => (props.counter = response.counter));
-  // counterElement.textContent = counter;
+function fetchCounter(method) {
+  return fetch("http://localhost:3000/api/counter", { method }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+  });
 }
 
-const App = (props) =>
-  ce(React.Fragment, null, [
+const App = (props) => {
+  const [counter, setCounter] = React.useState(props.counter);
+
+  return ce(React.Fragment, null, [
     ce("h1", null, [
       "Counter: ",
-      ce("span", { className: "counter" }, props.counter),
+      ce("span", { className: "counter" }, counter),
     ]),
     ce(
       "button",
       {
         className: "increment-button",
-        // onClick: changeCounter("POST"),
-        onClick: () => console.log("clicked"),
+        onClick: () => fetchCounter("POST").then(response => setCounter(response.counter)),
       },
       "Increment"
     ),
     ce(
       "button",
-      { className: "reset-button", onClick: () => console.log("clicked") },
+      {
+        className: "reset-button",
+        onClick: () => fetchCounter("DELETE").then(response => setCounter(response.counter)),
+      },
       "Reset"
     ),
   ]);
-
+};
 module.exports = App;

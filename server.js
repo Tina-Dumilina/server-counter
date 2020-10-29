@@ -24,7 +24,12 @@ app.get("/", (req, res) => {
             null
           ),
           ce("title", null, "Server counter"),
-          ce("script", {defer: true, src: './public/main.js'})
+          ce("script", { defer: true, src: "./main.js" }),
+          ce("script", {
+            dangerouslySetInnerHTML: {
+              __html: `window.INITIAL_STATE = ${JSON.stringify(counter)}`,
+            },
+          }),
         ]),
         ce("body", null, ce("div", { id: "root" }, ce(Component, { counter }))),
       ])
@@ -34,7 +39,7 @@ app.get("/", (req, res) => {
 
 app.use("/", express.static("public"));
 
-app.use(express.static("public"));
+// app.use(express.static("public"));
 
 app.get("/api/counter", (req, res) => {
   res.json({ counter });
